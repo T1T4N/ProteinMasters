@@ -1,9 +1,9 @@
-package mk.ukim.finki.oi.proteins;
+package mk.ukim.finki.oi.proteins.p1;
 
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class Problem1 {
 
     public static final String DATA_DIR = "data/";
     public static final String FILE_PROTEIN_LINKS = "9606.protein.links.detailed.v9.1.txt";
@@ -13,14 +13,14 @@ public class Main {
     public static final String FILE_VENKA = "Venkatesan-09.tsv";
     public static final String FILE_YU = "Yu-11.tsv";
 
-    static HashMap<String, Integer> entrezMap;
-    static HashMap<Integer, String> entrezMapInv;
-    static HashMap<String, Integer> proteinIndexMap;
-    static String[] sortedProteins;
-    static HashMap<StringPair, ProteinInteraction> proteinInteractionsMap;
-    static HashMap<String, HashSet<String>> proteinAssociations;
+    private HashMap<String, Integer> entrezMap;
+    private HashMap<Integer, String> entrezMapInv;
+    private HashMap<String, Integer> proteinIndexMap;
+    private String[] sortedProteins;
+    private HashMap<StringPair, ProteinInteraction> proteinInteractionsMap;
+    private HashMap<String, HashSet<String>> proteinAssociations;
 
-    public static void main(String[] args) {
+    public void execute() {
         try {
             long t1 = System.currentTimeMillis();
             buildEntrezMap();
@@ -42,7 +42,7 @@ public class Main {
             t2 = System.currentTimeMillis();
             System.out.println(String.format("Data sets processed in %d ms", t2-t1));
 
-            // No need for this loop since there is no combinedScoreChange if
+            // No need for this loop since there is no combinedScore change if
             // No change was made to the proteinInteraction
             /*
             for (ProteinInteraction pi : proteinInteractionsMap.values()){
@@ -58,7 +58,7 @@ public class Main {
         }
     }
 
-    private static void processDataSet(int fileNum) throws IOException {
+    private void processDataSet(int fileNum) throws IOException {
         BufferedReader br = null;
         switch (fileNum) {
             case 1:
@@ -158,7 +158,7 @@ public class Main {
         br.close();
     }
 
-    private static void buildEntrezMap() throws IOException {
+    private void buildEntrezMap() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(DATA_DIR + FILE_MAPPING_ENTREZ)));
 
         // #Entrez_Gene_ID	STRING_Locus_ID
@@ -177,7 +177,7 @@ public class Main {
         }
         br.close();
     }
-    private static void processInteractions() throws IOException {
+    private void processInteractions() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(DATA_DIR + FILE_PROTEIN_LINKS)));
         br.readLine(); // The column header line
 

@@ -1,4 +1,4 @@
-package mk.ukim.finki.oi.proteins;
+package mk.ukim.finki.oi.proteins.p1;
 
 /**
  * Created by robert on 4/3/15.
