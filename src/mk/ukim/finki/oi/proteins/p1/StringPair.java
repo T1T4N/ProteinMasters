@@ -1,7 +1,11 @@
 package mk.ukim.finki.oi.proteins.p1;
 
+import java.util.Comparator;
+import java.util.Map;
+
 /**
- * Created by robert on 4/3/15.
+ * Created by Robert on 4/3/15.
+ *
  */
 public class StringPair {
     public String val1, val2;
@@ -38,4 +42,22 @@ public class StringPair {
     public int hashCode() {
         return hashcode;
     }
+
+    public static Comparator<java.util.Map.Entry<StringPair, ProteinInteraction>> nameComparator = new Comparator<Map.Entry<StringPair, ProteinInteraction>>() {
+        @Override
+        public int compare(Map.Entry<StringPair, ProteinInteraction> o1, Map.Entry<StringPair, ProteinInteraction> o2) {
+            int i = -o1.getKey().val1.compareTo(o2.getKey().val1);
+            if (i != 0) return i;
+
+            i = -o1.getKey().val2.compareTo(o2.getKey().val2);
+            return i;
+        }
+    };
+
+    public static Comparator<java.util.Map.Entry<StringPair, ProteinInteraction>> scoreComparator = new Comparator<Map.Entry<StringPair, ProteinInteraction>>() {
+        @Override
+        public int compare(Map.Entry<StringPair, ProteinInteraction> o1, Map.Entry<StringPair, ProteinInteraction> o2) {
+            return o2.getValue().combinedScore - o1.getValue().combinedScore;
+        }
+    };
 }

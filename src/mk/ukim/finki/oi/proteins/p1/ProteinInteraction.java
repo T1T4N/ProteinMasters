@@ -1,7 +1,8 @@
 package mk.ukim.finki.oi.proteins.p1;
 
 /**
- * Created by robert on 4/3/15.
+ * Created by Robert on 04.03.2015
+ *
  */
 public class ProteinInteraction {
     String protein1, protein2;
@@ -39,19 +40,19 @@ public class ProteinInteraction {
 
     @Override
     public String toString() {
-        return  protein1 + ' ' +
-                protein2 + ' ' +
-                neighborhood + ' ' +
-                fusion + ' ' +
-                cooccurence + ' ' +
-                coexpression + ' ' +
-                experimental + ' ' +
-                database + ' ' +
-                textmining + ' ' +
-                hi_score + ' ' +
-                lit_score + ' ' +
-                venka_score + ' ' +
-                yu_score + ' ' +
+        return protein1 + '\t' +
+                protein2 + '\t' +
+                neighborhood + '\t' +
+                fusion + '\t' +
+                cooccurence + '\t' +
+                coexpression + '\t' +
+                experimental + '\t' +
+                database + '\t' +
+                textmining + '\t' +
+                hi_score + '\t' +
+                lit_score + '\t' +
+                venka_score + '\t' +
+                yu_score + '\t' +
                 combinedScore;
     }
 
