@@ -12,7 +12,7 @@ public class StringPair {
         this.val2 = val2;
 
         hashcode = val1 != null ? val1.hashCode() : 0;
-        hashcode = 31 * hashcode  + (val2 != null ? val2.hashCode() : 0);
+        hashcode = 31 * hashcode  * (val2 != null ? val2.hashCode() : 0);
 
 
     }
@@ -29,9 +29,8 @@ public class StringPair {
 
         StringPair that = (StringPair) o;
 
-        if (val1 != null ? !val1.equals(that.val1) : that.val1 != null) return false;
-        if (val2 != null ? !val2.equals(that.val2) : that.val2 != null) return false;
-
+        if(!val1.equals(that.val1)) return false;
+        if(!val2.equals(that.val2)) return false;
         return true;
     }
 
