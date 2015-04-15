@@ -9,7 +9,7 @@ public class Problem1 {
     public static final String DATA_DIR = "data/";
     public static final String FILE_PROTEIN_LINKS = "9606.protein.links.detailed.v9.1.txt";
     public static final String FILE_MAPPING_ENTREZ = "entrez_gene_id.vs.string.v9.05.28122012.txt";
-    public static final String FILE_HI2 = "HI-II-14.tsv";
+    public static final String FILE_HI2 = "HI-II-14.tbuildEntrezMapsv";
     public static final String FILE_LIT = "Lit-BM-13.tsv";
     public static final String FILE_VENKA = "Venkatesan-09.tsv";
     public static final String FILE_YU = "Yu-11.tsv";

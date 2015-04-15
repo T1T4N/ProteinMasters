@@ -1,6 +1,8 @@
 library(data.table)
 library(igraph)
 
+# Ова се прави затоа што ако се зададат сите параметри,
+# не се губи време R да ги открите
 reading_db = function(data, separator = "", head = FALSE, quote_char = "") {
   initial = read.table(data, sep = separator, header = head, nrow = 10)
   classes = sapply(initial, class)
@@ -9,11 +11,10 @@ reading_db = function(data, separator = "", head = FALSE, quote_char = "") {
   tmp
 }
 
+# Се отстрануват multyedges
 create_interaction_graph = function(x, directed = FALSE) {
   graph = graph.data.frame(x, directed)
   graph = simplify(graph, edge.attr.comb = "first")
-  weight_vector = get.edge.attribute(graph, "combined_score")
-  graph = set.edge.attribute(graph, "weight", value = weight_vector)
   graph
 }
 

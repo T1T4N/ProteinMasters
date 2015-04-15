@@ -1,8 +1,19 @@
 source("create_interaction_graphs.R")
+
+# Функцијата проверува дали децата на одреден term се наоѓат во помалце
+# од 30 протеини.
+# input:
+# - term: термот кој се разгледува
+# - graph: релациите меѓу terms (Не е сигурно дали треба сите врски)
+# - data: табелата со релација протеин-term
+# output:
+# - boolean индикатор дали го исполнува условот или не
 filter_child = function(term, graph, data) {
   tmp = TRUE
+  # Се прави множество на деца на term ("in" деца се тие врски кои влегуват во него)
   vertices = V(graph)[neighbors(graph, as.character(term), mode = "in")]$name
   for(vertex in vertices) {
+    # Проверка дали воопшто го има во податоците
     if(!any(is.na(data[vertex]))) {
       if(data[vertex][1]$count > 30) {
         tmp = FALSE
@@ -13,9 +24,19 @@ filter_child = function(term, graph, data) {
   tmp
 }
 
+# Функција која се повикува за да се издвојат само информативните врски
+# input:
+# - data: множеството на кое се работе
+# - graph: релациите помеѓу terms
+# output:
+# - редуцираното множество
 reducing_set = function(data, graph) {
+  # Агрегатна функција: Select count(*) group by GO
+  # .N го враќа бројот на редови
   data[, count := .N, by = GO]
   tmp = data[count >= 30]
+  # .SD ги враќа сите колони и редови од групата
+  # За секој term се испитува filter_child
   data = tmp[, if(filter_child(GO, graph, data)) .SD, by = GO]
   data
 }
@@ -74,6 +95,9 @@ print(paste("Generating finish in ", t2 - t1))
 
 print("Processing new datasets...")
 t1 = Sys.time()
+# Се менува редоследот на колоните затоа што под default
+# креирањето граф за јазли ги зима вредностите од првите 2 колони,
+# a се наредно е атрибут на врска
 CCGOfull = reading_db("data/CCGOfull.txt")
 neworder = c(colnames(CCGOfull)[1], colnames(CCGOfull)[3], colnames(CCGOfull)[2])
 setcolorder(CCGOfull, neworder)
