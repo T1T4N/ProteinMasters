@@ -79,12 +79,12 @@ integrate_dbs = function(data, name) {
   print(paste(name, "finish in", t5 - t4))
 }
 
-protein_links_txt = "data/9606.protein.links.detailed.v9.1.txt.gz"
-entrez_mapping = "data/entrez_gene_id.vs.string.v9.05.28122012.txt"
-HI = "data/HI-II-14.tsv"
-Lit = "data/Lit-BM-13.tsv"
-Venkatesan = "data/Venkatesan-09.tsv"
-Yu = "data/Yu-11.tsv"
+protein_links_txt = "../data/9606.protein.links.detailed.v9.1.txt"
+entrez_mapping = "../data/entrez_gene_id.vs.string.v9.05.28122012.txt"
+HI = "../data/HI-II-14.tsv"
+Lit = "../data/Lit-BM-13.tsv"
+Venkatesan = "../data/Venkatesan-09.tsv"
+Yu = "../data/Yu-11.tsv"
 
 t1 = Sys.time()
 print("Reading from txt...")
@@ -127,9 +127,9 @@ print(paste("Reordering finish in ", t5 - t4))
 
 print("Writing to txt...")
 t6 = Sys.time()
-write.table(string_db, file = "data/HumanPPI.txt")
-write.table(string_db[combined_score > 700], file = "data/HumanPPI700.txt")
-write.table(string_db[combined_score > 900], file = "data/HumanPPI900.txt")
+write.table(string_db, file = "../output/HumanPPI.txt")
+write.table(string_db[combined_score > 700], file = "../output/HumanPPI700.txt")
+write.table(string_db[combined_score > 900], file = "../output/HumanPPI900.txt")
 t7 = Sys.time()
 print(paste("Writing finish in ", t7 - t6))
 
