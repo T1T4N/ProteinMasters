@@ -11,23 +11,20 @@ plot(degree_900, log = "xy")
 
 pearson_cor_coef_700 = assortativity.degree(humanPPI700_graph, FALSE)
 pearson_cor_coef_900 = assortativity.degree(humanPPI900_graph, FALSE)
+print(pearson_cor_coef_700)
+print(pearson_cor_coef_900)
 
-# tapply е loop функција, прв параметар е на кои податоци
-# втор параметар е кои да ги групира (ова група за секоја различен degree)
-# третиот е функцијата која ќе се примене (повеќе ?tapply)
 clustering_spectum_700 = tapply(degree(humanPPI700_graph), as.factor(degree(humanPPI700_graph)), clustering_coef)
 clustering_spectum_900 = tapply(degree(humanPPI900_graph), as.factor(degree(humanPPI900_graph)), clustering_coef)
 plot(names(clustering_spectum_700), clustering_spectum, xlab = "degree", ylab = "clustering coef")
 plot(names(clustering_spectum_900), clustering_spectum, xlab = "degree", ylab = "clustering coef")
 
-#Откривање на најголемата најкратка патека, резултатот е 16, нели е малку
 # large_component = decompose.graph(humanPPI700_graph)[[1]]
 # shortest_paths = shortest.paths(large_component, weights = NA)
 # longest_shortes_path = max(shortest_paths)
 # large_component = decompose.graph(humanPPI900_graph)[[1]]
 # shortest_paths = shortest.paths(large_component, weights = NA)
 # longest_shortes_path = max(shortest_paths)
-
 max_shortest_path_700 = 16
 max_shortest_path_900 = 15
 all_shortest_paths_700 = shortest.paths(humanPPI700_graph, weights = NA)
@@ -43,18 +40,16 @@ for(i in 1:max_shortest_path) {
 plot(percent_sp_pairs_700)
 plot(percent_sp_pairs_900)
 
+large_component_700 = decompose.graph(humanPPI700_graph)[[1]]
+large_component_900 = decompose.graph(humanPPI900_graph)[[1]]
+closeness_vector_700 = -log(closeness(large_component_700, weights = NULL))
+closeness_vector_900 = -log(closeness(large_component_900, weights = NULL))
+plot(table(round(closeness_vector_700, 2))*100/length(closeness_vector_700))
+plot(table(round(closeness_vector_900, 2))*100/length(closeness_vector_900))
 
+betweenness_vector_700 = -log(betweenness(large_component_700, directed = FALSE, weights = NULL, nobigint = FALSE, normalized = TRUE))
+betweenness_vector_900 = -log(betweenness(large_component_900, directed = FALSE, weights = NULL, nobigint = FALSE, normalized = TRUE))
+plot(table(round(betweenness_vector_700))*100/length(betweenness_vector_700))
+plot(table(round(betweenness_vector_900))*100/length(betweenness_vector_900))
 
-#Недовршено. Треба да се log, поделе на интеравали и нацрта
-t1 = Sys.time()
-# closeness_vector = closeness(humanPPI700_graph, weights = NULL)
-closeness_vector = closeness(humanPPI900_graph, weights =  NULL)
-t2 = Sys.time()
-print(t2 - t1)
-
-#исто како за closeness, 4min
-t1 = Sys.time()
-betweenness_vector = betweenness(humanPPI700_graph, directed = FALSE, weights = NULL)
-t2 = Sys.time()
-print(t2 - t1)
 
