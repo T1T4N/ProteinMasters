@@ -7,7 +7,7 @@ nodesClustersPath = "data/nodesClustersList/nodesClustersJC"
 similarProteinsPath = "data/similarProteinsList"
 
 # loading node ids for each edge id
-currCluster = 1
+currCluster = 1 
 with open(nodesClustersPath) as f:
     for line in f:
         spl = line.replace('"', '').strip().split(" ")
