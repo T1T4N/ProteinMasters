@@ -3,8 +3,10 @@ __author__ = 'goran'
 clusterNodes = {}
 nodeClusters = {}
 
-nodesClustersPath = "data/nodesClustersList/nodesClustersJC"
-similarProteinsPath = "data/similarProteinsList"
+graph = "WH"
+
+nodesClustersPath = "data/nodesClustersList/nodesClusters" + graph
+similarProteinsFolderPath = "data/similarProteins" + graph
 
 # initializing clusterNodes to contains all nodes which belong to the specific cluster
 # key = cluster, value = (set of nodes which belong to cluster)
@@ -38,7 +40,7 @@ for i in nodeClusters: # we are looking for all the neighbours of node i
 # each line format is:
 # protienId: similarProtein1 similarProtein2 ...(list of all similar proteins separated by one space)
 for protein in proteinsWithMutualCluster:
-    with open("data/similarProteins/protein_" + str(protein), 'w') as f:
+    with open(similarProteinsFolderPath + "/protein_" + str(protein), 'w') as f:
         f.write(" ".join(proteinsWithMutualCluster[protein]))
 
 
