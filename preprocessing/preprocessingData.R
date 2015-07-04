@@ -1,3 +1,8 @@
+# Integrate data of human proteinsfrom from all sources
+# Filter data with above 700 and 900 confidence score
+#   Input: string, entrez mapping, hi, lit, venkatesan, yu data
+#   Output: HumanPPI700 and HumanPPI900
+
 library(data.table)
 
 read.db = function(x, sep = "") {

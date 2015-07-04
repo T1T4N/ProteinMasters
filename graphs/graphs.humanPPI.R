@@ -1,3 +1,6 @@
+# Make graphs from HumanPPI700 set and HumanPPI900 set
+#   Input: HumanPPI700, HumanPPI900
+#   Output: humanPPI700.graph, humanPPI900.graph (in RAM)
 library(data.table)
 library(igraph)
 

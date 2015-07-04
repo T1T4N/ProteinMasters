@@ -1,14 +1,15 @@
-source("create_interaction_graphs.R")
+# Set GO terms on HumanPPI data
+# Subset data with confidence score for terms above 3
+# Split generated sets on 3 parts, BP, CC, MF
+#   - keep only informative ties between terms
+#   Input: humanPPI700.graph, humanPPI900.graph, 9606_go_knowledge_full, 
+#          BPGOterms, CCGOterms, MFGOterms, BPGOfull, CCGOfull, MFGOfull
+#   Output: HumanPPI700_GO, HumanPPI900_GO, 
+#           HumanPPI700_GO_XX, HumanPPI700_GO_XX_conf
+#           HumanPPI900_GO_XX, HumanPPI900_GO_XX_conf | XX in BP, CC, MF
+source("graphs/graphs.humanPPI.R")
 
-# Функцијата проверува дали децата на одреден term се наоѓат во помалку
-# од 30 протеини.
-# input:
-# - term: термот кој се разгледува
-# - graph: релациите меѓу terms (Не е сигурно дали треба сите врски)
-# - data: табелата со релација протеин-term
-# output:
-# - boolean индикатор дали го исполнува условот или не
-filter_child = function(term, graph, data) {
+filter.child = function(term, graph, data) {
   tmp = TRUE
   vertices = V(graph)[neighbors(graph, as.character(term), mode = "in")]$name
   for(vertex in vertices) {
@@ -22,16 +23,10 @@ filter_child = function(term, graph, data) {
   tmp
 }
 
-# Функција која се повикува за да се издвојат само информативните врски
-# input:
-# - data: множеството на кое се работе
-# - graph: релациите помеѓу terms
-# output:
-# - редуцираното множество
-reducing_set = function(data, graph) {
+filter.informative.ties = function(data, graph) {
   data[, count := .N, by = GO]
   tmp = data[count >= 30]
-  data = tmp[, if(filter_child(GO, graph, data)) .SD, by = GO]
+  data = tmp[, if(filter.child(GO, graph, data)) .SD, by = GO]
   data
 }
 
@@ -47,8 +42,8 @@ print(paste("Reading finish in ", t2 - t1))
 
 print("Filtering data...")
 t1 = Sys.time()
-HumanPPI700_GO = go_knowledge_full[protein %in% V(humanPPI700_graph)$name]
-HumanPPI900_GO = go_knowledge_full[protein %in% V(humanPPI900_graph)$name]
+HumanPPI700_GO = go_knowledge_full[protein %in% V(humanPPI700.graph)$name]
+HumanPPI900_GO = go_knowledge_full[protein %in% V(humanPPI900.graph)$name]
 HumanPPI700_GO_conf = HumanPPI700_GO[conf >= 3]
 HumanPPI900_GO_conf = HumanPPI900_GO[conf >= 3]
 setkey(HumanPPI700_GO, GO)
@@ -58,14 +53,14 @@ setkey(HumanPPI900_GO_conf, GO)
 t2 = Sys.time()
 print(paste("Filtering finish in ", t2 - t1))
 
-# print("Writing to txt...")
-# t1 = Sys.time()
-# write.table(HumanPPI700_GO, file = "data/HumanPPI700_GO.txt")
-# write.table(HumanPPI700_GO_conf, file = "data/HumanPPI700_GO_conf.txt")
-# write.table(HumanPPI900_GO, file = "data/HumanPPI900_GO.txt")
-# write.table(HumanPPI900_GO_conf, file = "data/HumanPPI900_GO_conf.txt")
-# t2 = Sys.time()
-# print(paste("Writing finish in ", t2 - t1))
+print("Writing to txt...")
+t1 = Sys.time()
+write.table(HumanPPI700_GO, file = "data/HumanPPI700_GO.txt")
+write.table(HumanPPI700_GO_conf, file = "data/HumanPPI700_GO_conf.txt")
+write.table(HumanPPI900_GO, file = "data/HumanPPI900_GO.txt")
+write.table(HumanPPI900_GO_conf, file = "data/HumanPPI900_GO_conf.txt")
+t2 = Sys.time()
+print(paste("Writing finish in ", t2 - t1))
 
 print("Generating new sets...")
 t1 = Sys.time()
@@ -104,18 +99,18 @@ setcolorder(BPGOfull, neworder)
 CC_rel = graph.data.frame(CCGOfull, directed = TRUE)
 MF_rel = graph.data.frame(MFGOfull, directed = TRUE)
 BP_rel = graph.data.frame(BPGOfull, directed = TRUE)
-HumanPPI700_GO_CC = reducing_set(HumanPPI700_GO_CC, CC_rel)
-HumanPPI700_GO_CC_conf = reducing_set(HumanPPI700_GO_CC_conf, CC_rel)
-HumanPPI900_GO_CC = reducing_set(HumanPPI900_GO_CC, CC_rel)
-HumanPPI900_GO_CC_conf = reducing_set(HumanPPI900_GO_CC_conf, CC_rel)
-HumanPPI700_GO_MF = reducing_set(HumanPPI700_GO_MF, MF_rel)
-HumanPPI700_GO_MF_conf = reducing_set(HumanPPI700_GO_MF_conf, MF_rel)
-HumanPPI900_GO_MF = reducing_set(HumanPPI900_GO_MF, MF_rel)
-HumanPPI900_GO_MF_conf = reducing_set(HumanPPI900_GO_MF_conf, MF_rel)
-HumanPPI700_GO_BP = reducing_set(HumanPPI700_GO_BP, BP_rel)
-HumanPPI700_GO_BP_conf = reducing_set(HumanPPI700_GO_BP_conf, BP_rel)
-HumanPPI900_GO_BP = reducing_set(HumanPPI900_GO_BP, BP_rel)
-HumanPPI900_GO_BP_conf = reducing_set(HumanPPI900_GO_BP_conf, BP_rel)
+HumanPPI700_GO_CC = filter.informative.ties(HumanPPI700_GO_CC, CC_rel)
+HumanPPI700_GO_CC_conf = filter.informative.ties(HumanPPI700_GO_CC_conf, CC_rel)
+HumanPPI900_GO_CC = filter.informative.ties(HumanPPI900_GO_CC, CC_rel)
+HumanPPI900_GO_CC_conf = filter.informative.ties(HumanPPI900_GO_CC_conf, CC_rel)
+HumanPPI700_GO_MF = filter.informative.ties(HumanPPI700_GO_MF, MF_rel)
+HumanPPI700_GO_MF_conf = filter.informative.ties(HumanPPI700_GO_MF_conf, MF_rel)
+HumanPPI900_GO_MF = filter.informative.ties(HumanPPI900_GO_MF, MF_rel)
+HumanPPI900_GO_MF_conf = filter.informative.ties(HumanPPI900_GO_MF_conf, MF_rel)
+HumanPPI700_GO_BP = filter.informative.ties(HumanPPI700_GO_BP, BP_rel)
+HumanPPI700_GO_BP_conf = filter.informative.ties(HumanPPI700_GO_BP_conf, BP_rel)
+HumanPPI900_GO_BP = filter.informative.ties(HumanPPI900_GO_BP, BP_rel)
+HumanPPI900_GO_BP_conf = filter.informative.ties(HumanPPI900_GO_BP_conf, BP_rel)
 t2 = Sys.time()
 print(paste("Processing finish in ", t2 - t1))
 

@@ -1,6 +1,15 @@
-source("create.interaction.graphs.BP.conf.R")
+# It will calculate similarities of all pairs of protein in bp.conf.700
+# This script is shared between computers to finish earlier
+# Sets for all 3 computers are our names
+#   Input: bp.conf.700
+#   Output: partial W_sim files
+# *After all similarities are computed partial files are integrated in 
+#  one file W_sim
+source("graphs/graphs.BP.conf.R")
 library(Rcpp)
 library(GOSemSim)
+
+connected.graph = decompose.graph(graph = bp.conf.700.graph)[[1]]
 
 jacard = function(T1, T2) {
   T1 = unique(T1)
@@ -9,10 +18,6 @@ jacard = function(T1, T2) {
   (intersection.length/length(T1)+intersection.length/length(T2))/2
 }
 
-# Се извлекува само најголемата сврзана компонента
-connected.graph = decompose.graph(graph = bp.conf.700.graph)[[1]]
-
-# Овој код е извлечен во посебни функции за да се повика во RCpp
 calculate.sim = function(p1, p2) {
   terms1 = V(connected.graph)[p1]$GO[[1]]
   terms2 = V(connected.graph)[p2]$GO[[1]]
@@ -57,7 +62,6 @@ cppFunction('DataFrame findAllSims(NumericVector p, int N, Function goSim, Funct
 
 nproteins = vcount(connected.graph)
 
-# Изберете си ваше множество
 daniel = 1:1643
 goran = 1644:3742
 robert = 3743:8843
@@ -77,4 +81,3 @@ write.table(result, paste("data/partial/", filename, sep = ""), sep = " ", row.n
 
 remove(nproteins, daniel, goran, robert, 
        set, working.set, t1, t2, result, filename)
-

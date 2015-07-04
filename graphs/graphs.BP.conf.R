@@ -1,4 +1,9 @@
-source("create.interaction.graphs.R")
+# Create graph from interaction on humanPPI from BP functions with high confidence
+# Set GO terms to all verticies (proteins)
+#   Input: humanPPI700.graph, humanPPI900.graph
+#          HumanPPI700_GO_BP_conf, HumanPPI900_GO_BP_conf
+#   Output: bp.conf.700.graph, bp.conf.900.graph (RAM)
+source("graphs/graphs.humanPPI.R")
 
 humanPPI700.BP.conf = as.data.table(read.table("data/HumanPPI700_GO_BP_conf.txt", header = TRUE))
 humanPPI900.BP.conf = as.data.table(read.table("data/HumanPPI900_GO_BP_conf.txt", header = TRUE))

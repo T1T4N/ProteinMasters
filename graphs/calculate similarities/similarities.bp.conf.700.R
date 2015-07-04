@@ -1,4 +1,8 @@
-source("create.interaction.graphs.BP.conf.R")
+# Set content similarity, calculate and set structure and hybrid similarities
+# (metrics: Jacard, Resnik, Wang) to bp.conf.700.graph
+#   Input: bp.conf.700.graph, content similarity with all metrics in W_sim
+#   Output: bp.conf.700.graph edgelist file with all metrics 
+source("graphs/graphs.BP.conf.R")
 library(doParallel)
 registerDoParallel(cores = "3")
 
@@ -63,7 +67,10 @@ result = foreach(e = 1:nrow(edges), .combine = "rbind", .inorder = FALSE) %dopar
 t2 = Sys.time()
 print(t2 - t1)
 result = as.data.table(result)
-# write.table(result, file = "data/graphs_all.txt", col.names = TRUE, row.names = FALSE)
+
+write.table(result, file = "data/graphs_all.txt", col.names = TRUE, row.names = FALSE)
+
+# normalize without observed protein in firstSum and secondSum
 # write.table(result, "data/graphs.txt", col.names = TRUE, row.names = FALSE)
 
 remove(edges, W, result, graph, t1, t2)
